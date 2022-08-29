@@ -1,0 +1,31 @@
+# Android
+# Build your Android project with Gradle.
+# Add steps that test, sign, and distribute the APK, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/android
+
+trigger:
+- master
+
+pool:
+  vmImage: 'macos-latest'
+
+# jobs:
+# - job: Build_Android
+steps:
+- task: NodeTool@0
+  displayName: 'Install Node'
+  inputs:
+    versionSpec: '16.16.0'
+
+- script: npm install
+  displayName: 'Install node dependencies'
+  
+
+- task: Gradle@2
+  inputs:
+    workingDirectory: 'android'
+    gradleWrapperFile: 'android/gradlew'
+    gradleOptions: '-Xmx3072m'
+    publishJUnitResults: false
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'assembleDebug'
